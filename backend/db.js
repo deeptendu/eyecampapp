@@ -1,8 +1,9 @@
+
 const mongoose = require('mongoose');
 const mongoURI = "mongodb://localhost:27017/eyecamp"
  
 const connectToMongo = () =>{
-    mongoose.connect(mongoURI).then(
+    mongoose.connect(process.env.MONGO_URI).then(
         ()=>{
             console.log("Conneted to mongo successfully");
         }

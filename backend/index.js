@@ -1,3 +1,4 @@
+require('dotenv').config();
 const connectToMongo = require('./db');
 const createUser= require('./routes/createUser');
 const login= require('./routes/login');

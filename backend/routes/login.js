@@ -5,7 +5,6 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const JWT_SECRET = require('../config');
 
 router.post('/api/auth/login', [
     body('email', 'Enter a valid email').isEmail(),
@@ -28,7 +27,7 @@ router.post('/api/auth/login', [
                 user: { id: user.id ,
                     email:user.email
                 }
-            }, JWT_SECRET)
+            }, process.env.JWT_SECRET)
             return res.json({ token: token })
         }
         else{

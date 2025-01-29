@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const JWT_SECRET = require('../config')
 
 
 const fetchUser = (req, res, next) => {
@@ -8,7 +7,7 @@ const fetchUser = (req, res, next) => {
         res.status(401).json({ error: 'Please authenticate using a valid token' })
     }
     try {
-        const data = jwt.verify(token, JWT_SECRET);
+        const data = jwt.verify(token, process.env.JWT_SECRET);
       //  console.log('user found '+JSON.stringify(data.user))
         req.user = data.user;
         next();
