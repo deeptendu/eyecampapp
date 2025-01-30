@@ -22,9 +22,6 @@ const Login = (props) => {
     const handleLogin = () => {
         fetchWithAlert(loginUrl, options)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
                 return response.json()
             })
             .then(res => {
@@ -46,9 +43,6 @@ const Login = (props) => {
         };
 
         fetchWithAlert(getUser, headers).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
             return response.json()
         }).then(res => {
             // console.log('response' + JSON.stringify(res));

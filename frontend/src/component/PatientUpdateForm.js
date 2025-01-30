@@ -23,9 +23,7 @@ const PatientUpdateForm = (props) => {
         };
         fetchWithAlert(findPatient + props.patientNoSearched, headers)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+               
                 return response.json()
             })
             .then(res => {
@@ -63,9 +61,7 @@ const PatientUpdateForm = (props) => {
         };
         fetchWithAlert(updatePatient, options)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+               
                 return response.json()
             })
             .then(res => {
