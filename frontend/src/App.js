@@ -6,7 +6,7 @@ import PatientUpdateForm from './component/PatientUpdateForm';
 import Register from './component/Register';
 import { useState } from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route, Navigate
 } from "react-router-dom";
