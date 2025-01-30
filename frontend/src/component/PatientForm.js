@@ -79,6 +79,7 @@ const PatientForm = (props) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json' ,
                 'auth-token': localStorage.getItem('auth-token')
             },
             body: JSON.stringify(patientDetails)
