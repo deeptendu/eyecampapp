@@ -21,6 +21,7 @@ app.use(cors({
   origin: "https://deeptendu.github.io", // React app's URL
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   credentials: true, // Allow cookies if needed
+  allowedHeaders: ['Content-Type', 'auth-token','Accept']
 }));
 app.use(express.json())
 app.post('/api/auth/createuser', createUser);

@@ -6,6 +6,7 @@ export default async function fetchWithAlert(url, options = {}) {
       const response = await fetch(`${baseURl}${url}`, options);
       console.log(`api url,${baseURl}${url}`);
       if (!response.ok) {
+        console.log(response.status)
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
   
