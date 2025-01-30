@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { loginUrl, getUser } from "../ApiUrls";
 import { useNavigate ,Link} from 'react-router-dom';
-
+import fetchWithAlert from "../utils/FetchWrapper";
 
 const Login = (props) => {
 
@@ -19,7 +19,7 @@ const Login = (props) => {
     };
 
     const handleLogin = () => {
-        fetch(loginUrl, options)
+        fetchWithAlert(loginUrl, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -43,7 +43,7 @@ const Login = (props) => {
             }
         };
 
-        fetch(getUser, headers).then(response => {
+        fetchWithAlert(getUser, headers).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

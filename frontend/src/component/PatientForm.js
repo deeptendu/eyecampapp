@@ -3,6 +3,8 @@ import React from 'react';
 import { useState } from "react";
 import { createPatient } from '../ApiUrls';
 import { Link } from 'react-router-dom';
+import fetchWithAlert from "../utils/FetchWrapper";
+
 
 const PatientForm = (props) => {
 
@@ -82,7 +84,7 @@ const PatientForm = (props) => {
             body: JSON.stringify(patientDetails)
 
         };
-        fetch(createPatient, headers)
+        fetchWithAlert(createPatient, headers)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

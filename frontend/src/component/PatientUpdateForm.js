@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { findPatient, updatePatient } from "../ApiUrls"
+import { findPatient, updatePatient } from "../ApiUrls";
+import fetchWithAlert from "../utils/FetchWrapper";
+
 const PatientUpdateForm = (props) => {
     const [showDate, setShowDate] = useState(false);
     const [operationDate, setOperationDate] = useState("");
@@ -18,7 +20,7 @@ const PatientUpdateForm = (props) => {
                 'auth-token': localStorage.getItem('auth-token')
             }
         };
-        fetch(findPatient + props.patientNoSearched, headers)
+        fetchWithAlert(findPatient + props.patientNoSearched, headers)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -57,7 +59,7 @@ const PatientUpdateForm = (props) => {
                 operationDate: operationDate
             })
         };
-        fetch(updatePatient, options)
+        fetchWithAlert(updatePatient, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

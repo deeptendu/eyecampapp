@@ -3,6 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { userRegistration } from "../ApiUrls";
 import { useNavigate ,Link} from 'react-router-dom';
+import fetchWithAlert from "../utils/FetchWrapper";
 
 
 const Register = (props) => {
@@ -19,7 +20,7 @@ const Register = (props) => {
     };
 
     const handleUserRegistration = () => {
-        fetch(userRegistration, options)
+        fetchWithAlert(userRegistration, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

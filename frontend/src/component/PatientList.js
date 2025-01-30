@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Patient from './Patient';
 //import data from './PatientListData.json'
 import {getPatientList} from '../ApiUrls'
+import fetchWithAlert from "../utils/FetchWrapper";
 
 const PatientList = (props) => {
     const [patientList, setPatientList] = useState([]);
@@ -15,7 +16,7 @@ const PatientList = (props) => {
                 'auth-token': localStorage.getItem('auth-token')
             }
         };
-        fetch(getPatientList+listSize, headers)
+        fetchWithAlert(getPatientList+listSize, headers)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
