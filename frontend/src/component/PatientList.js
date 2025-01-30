@@ -18,10 +18,6 @@ const PatientList = (props) => {
             }
         };
         fetchWithAlert(getPatientList+listSize, headers)
-            .then(response => {
-              
-                return response.json()
-            })
             .then(res => {
                 //console.log('response' + JSON.stringify(res.token));
                 setPatientList(res);

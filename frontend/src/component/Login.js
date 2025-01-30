@@ -21,9 +21,6 @@ const Login = (props) => {
 
     const handleLogin = () => {
         fetchWithAlert(loginUrl, options)
-            .then(response => {
-                return response.json()
-            })
             .then(res => {
                 //console.log('response' + JSON.stringify(res.token));
                 localStorage.setItem("auth-token", res.token);
@@ -42,9 +39,7 @@ const Login = (props) => {
             }
         };
 
-        fetchWithAlert(getUser, headers).then(response => {
-            return response.json()
-        }).then(res => {
+        fetchWithAlert(getUser, headers).then(res => {
             // console.log('response' + JSON.stringify(res));
             // console.log('response email' + JSON.stringify(res.email));
             if(res.email){

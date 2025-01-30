@@ -86,9 +86,6 @@ const PatientForm = (props) => {
 
         };
         fetchWithAlert(createPatient, headers)
-            .then(response => {
-                return response.json()
-            })
             .then(res => {
                 console.log('response' + JSON.stringify(res));
                 setPatientNumber(res.PatientNumber);

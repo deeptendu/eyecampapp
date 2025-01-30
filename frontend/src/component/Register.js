@@ -22,10 +22,6 @@ const Register = (props) => {
 
     const handleUserRegistration = () => {
         fetchWithAlert(userRegistration, options)
-            .then(response => {
-                
-                return response.json()
-            })
             .then(res => {
                 console.log('response' + JSON.stringify(res));
                 navigate('/login');

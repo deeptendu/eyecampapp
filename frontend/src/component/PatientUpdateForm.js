@@ -22,10 +22,7 @@ const PatientUpdateForm = (props) => {
             }
         };
         fetchWithAlert(findPatient + props.patientNoSearched, headers)
-            .then(response => {
-               
-                return response.json()
-            })
+         
             .then(res => {
                 //console.log('response' + JSON.stringify(res));
                 setCurrentPatient(res);
@@ -60,10 +57,6 @@ const PatientUpdateForm = (props) => {
             })
         };
         fetchWithAlert(updatePatient, options)
-            .then(response => {
-               
-                return response.json()
-            })
             .then(res => {
                 setDateUpdatedInDB(true)
                 console.log('response' + JSON.stringify(res));
