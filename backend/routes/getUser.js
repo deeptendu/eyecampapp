@@ -8,7 +8,7 @@ router.get('/api/auth/getuser',fetchuser, async (req, res) => {
     try {
         const userId= req.user.id;
         const user = await userSchema.findById(userId).select('-password');
-        res.json(user);
+        res.status(200).json(user);
     }   
     catch (error) {
         console.log('error occured' + error);

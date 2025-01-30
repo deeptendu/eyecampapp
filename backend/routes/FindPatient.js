@@ -14,7 +14,7 @@ router.get('/api/findpatient/:number',  fetchuser, async (req, res) => {
             if (!patient) {
                 return res.status(500).json({ error: "patient doesn't exist with this patient number " + req.params.number })
             }
-            res.json(patient);
+            res.status(200).json(patient);
         }
         catch (error) {
             console.log('error occured' + error);

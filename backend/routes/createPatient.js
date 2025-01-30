@@ -59,7 +59,7 @@ router.post('/api/createpatient', [
                 HusbandName: req.body.HusbandName,
                 createdBy: req.body.email,
             })
-            res.json({
+            res.status(200).json({
                 message: "Patient created sucesfully",
                 PatientNumber: patient.PatientNumber
             })

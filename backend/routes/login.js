@@ -28,7 +28,7 @@ router.post('/api/auth/login', [
                     email:user.email
                 }
             }, process.env.JWT_SECRET)
-            return res.json({ token: token })
+            return res.status(200).json({ token: token })
         }
         else{
             return res.status(400).json({ error: "Please enter a valid password"})

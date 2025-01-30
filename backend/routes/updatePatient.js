@@ -25,7 +25,7 @@ router.post('/api/updatepatient', [
             patient = await patientSchema.updateOne({ PatientNumber:req.body.PatientNumber }, 
                 {  $set: {operationDate: req.body.operationDate} }, { new: true })
             //console.log('patiner' + JSON.stringify(patient));
-            res.json({ message: "Patient updated sucesfully" })
+            res.status(200).json({ message: "Patient updated sucesfully" })
         }
         catch (error) {
             console.log('error occured' + error);

@@ -29,7 +29,7 @@ router.post('/api/auth/createuser', [
             email: req.body.email,
             password: securePassword
         })
-        res.json({ message: "user created sucesfully" })
+        res.status(200).json({ message: "user created sucesfully" })
     }
     catch(error){
         console.log('error occured'+error);
