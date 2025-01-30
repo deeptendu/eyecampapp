@@ -1,5 +1,5 @@
 // src/utils/fetchWrapper.js
-export async function fetchWithAlert(url, options = {}) {
+export default async function fetchWithAlert(url, options = {}) {
     try {
       const response = await fetch(url, options);
       console.log('api url'+url);
