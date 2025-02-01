@@ -23,7 +23,6 @@ const patientSchema = new mongoose.Schema({
     },
     AadharNumber: {
         type: String,
-        required : true
     },
     State: {
         type: String
