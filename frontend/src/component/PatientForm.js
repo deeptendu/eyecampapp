@@ -10,7 +10,7 @@ import SearchableDropdown from './SearchableDropdown';
 const PatientForm = (props) => {
 
     const [patientName, setPatientName] = useState("");
-    const [age, setAge] = useState();
+    const [age, setAge] = useState(0);
     const [gender, setGender] = useState("");
     const [mobileNo, setMobileNo] = useState();
     const [aadharNo, setAadharNo] = useState();
@@ -21,6 +21,47 @@ const PatientForm = (props) => {
     const [patientNumber, setPatientNumber] = useState("");
     const [createdSuccessFully, setCreatedSuccessFully] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState({});
+
+    const options = [
+        { value: "", label: "Select Patient State" },
+        { value: "AP", label: "Andhra Pradesh" },
+        { value: "AR", label: "Arunachal Pradesh" },
+        { value: "AS", label: "Assam" },
+        { value: "BR", label: "Bihar" },
+        { value: "CT", label: "Chhattisgarh" },
+        { value: "GA", label: "Gujarat" },
+        { value: "HR", label: "Haryana" },
+        { value: "HP", label: "Himachal Pradesh" },
+        { value: "JK", label: "Jammu and Kashmir" },
+        { value: "GA", label: "Goa" },
+        { value: "JH", label: "Jharkhand" },
+        { value: "KA", label: "Karnataka" },
+        { value: "KL", label: "Kerala" },
+        { value: "MP", label: "Madhya Pradesh" },
+        { value: "MH", label: "Maharashtra" },
+        { value: "MN", label: "Manipur" },
+        { value: "ML", label: "Meghalaya" },
+        { value: "MZ", label: "Mizoram" },
+        { value: "NL", label: "Nagaland" },
+        { value: "OR", label: "Odisha" },
+        { value: "PB", label: "Punjab" },
+        { value: "RJ", label: "Rajasthan" },
+        { value: "SK", label: "Sikkim" },
+        { value: "TN", label: "Tamil Nadu" },
+        { value: "TG", label: "Telangana" },
+        { value: "TR", label: "Tripura" },
+        { value: "UT", label: "Uttarakhand" },
+        { value: "UP", label: "Uttar Pradesh" },
+        { value: "WB", label: "West Bengal" },
+        { value: "AN", label: "Andaman and Nicobar Islands" },
+        { value: "CH", label: "Chandigarh" },
+        { value: "DN", label: "Dadra and Nagar Haveli" },
+        { value: "DD", label: "Daman and Diu" },
+        { value: "DL", label: "Delhi" },
+        { value: "LD", label: "Lakshadweep" },
+        { value: "PY", label: "Puducherry" }
+    ];
 
     let patientDetails = {
         PatientName: patientName,
@@ -37,10 +78,20 @@ const PatientForm = (props) => {
 
     let nameOnChange = (event) => {
         setPatientName(event.target.value);
+        if (/^[A-Za-z]{3,}$/.test(event.target.value)) {
+            setError({ ...error, name: "" }); // valid number input
+        } else {
+            setError({ ...error, name: "Name must have atleast 3 Characters" });
+        }
         //console.log(patientName);
     }
     let ageOnChange = (event) => {
         setAge(event.target.value);
+        if (/^\d{0,2}$/.test(event.target.value)) {
+            setError({ ...error, age: "" }); // valid number input
+        } else {
+            setError({ ...error, age: "Please enter a valid age" });
+        }
         //console.log(patientName);
     }
     let genderOnChange = (event) => {
@@ -49,11 +100,23 @@ const PatientForm = (props) => {
         //console.log(patientName);
     }
     let mobileOnChange = (event) => {
-        setMobileNo(event.target.value);
-        //console.log(patientName);
+        let value = event.target.value;
+        setMobileNo(value);
+        if (/^\d{10}$/.test(value)) {
+            setError({ ...error, mobileNo: "" }); // valid number input
+        } else {
+            setError({ ...error, mobileNo: "Phone number must be exactly 10 digits" });
+        }
+        // console.log(error);
     }
     let aadharOnChange = (event) => {
-        setAadharNo(event.target.value);
+        let value = event.target.value;
+        setAadharNo(value);
+        if (/^\d{12}$/.test(value)) {
+            setError({ ...error, aadharNo: "" }); // valid number input
+        } else {
+            setError({ ...error, aadharNo: "Aadhar number must be exactly 12 digits" });
+        }
         //console.log(patientName);
     }
     let stateOnChange = (value) => {
@@ -89,7 +152,7 @@ const PatientForm = (props) => {
         };
         fetchWithAlert(createPatient, headers)
             .then(res => {
-                console.log('response' + JSON.stringify(res));
+                //console.log('response' + JSON.stringify(res));
                 setPatientNumber(res.PatientNumber);
                 setCreatedSuccessFully(true);
                 props.setNewPatientCreated(true);
@@ -137,7 +200,8 @@ const PatientForm = (props) => {
                             <label htmlFor="inputName" className="col-form-label">Patient Name <span className="text-danger">*</span></label>
                         </div>
                         <div className='col-md-10'>
-                            <input type="text" aria-label="Patient Name" placeholder="Patient Name" value={patientName} onChange={nameOnChange} className="form-control" />
+                            <input type="text" aria-label="Patient Name" placeholder="Patient Name" value={patientName} onChange={nameOnChange} className="form-control me-2" />
+                            {error?.name && <div style={{ color: "red" }}>{error.name}</div>}
                         </div>
 
                     </div>
@@ -147,7 +211,8 @@ const PatientForm = (props) => {
                         </div>
                         <div className='col-md-10'>
                             <div className="input-group">
-                                <input type="text" aria-label="Age" placeholder='Years' value={age} onChange={ageOnChange} className="form-control" />
+                                <input type="text" aria-label="Age" placeholder='Years' value={age === 0 ? '' : age} onChange={ageOnChange} className="form-control me-2" />
+                                {error?.age && <div style={{ color: "red" }}>{error.age}</div>}
                             </div>
                         </div>
 
@@ -178,7 +243,8 @@ const PatientForm = (props) => {
                         </div>
                         <div className='col-md-10'>
                             <div className="input-group">
-                                <input type="text" value={mobileNo} onChange={mobileOnChange} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control" />
+                                <input type="text" value={mobileNo} onChange={mobileOnChange} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control me-2" />
+                                {error?.mobileNo && <div style={{ color: "red" }}>{error.mobileNo}</div>}
                             </div>
                         </div>
 
@@ -189,7 +255,8 @@ const PatientForm = (props) => {
                         </div>
                         <div className='col-md-10'>
                             <div className="input-group">
-                                <input type="text" value={aadharNo} onChange={aadharOnChange} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control" />
+                                <input type="text" value={aadharNo} onChange={aadharOnChange} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control me-2" />
+                                {error?.aadharNo && <div style={{ color: "red" }}>{error.aadharNo}</div>}
                             </div>
                         </div>
                     </div>
@@ -239,7 +306,7 @@ const PatientForm = (props) => {
                                 <option value="PY">Puducherry</option>
                             </select> */}
 
-                            <SearchableDropdown stateOnChange={stateOnChange} />
+                            <SearchableDropdown options={options} onSelect={stateOnChange} />
                         </div>
                     </div>
 
@@ -277,16 +344,15 @@ const PatientForm = (props) => {
                     <div className='row my-3'>
                         <div className='col-md-6'>
                             <div className="col-md-12 d-grid gap-3">
-                                <button type="button" onClick={() => reset()} className="btn btn-outline-danger ">Reset</button>
+                                <button type="button" onClick={handleOnSubmit} disabled={error?.mobileNo ||
+                                    error?.aadharNo || error?.name || error?.age} className="btn btn-outline-success">Submit</button>
                             </div>
                         </div>
                         <div className='col-md-6'>
                             <div className="col-md-12 d-grid gap-3">
-                                <button type="button" onClick={handleOnSubmit} className="btn btn-outline-success">Submit</button>
+                                <button type="button" onClick={() => reset()} className="btn btn-outline-danger ">Reset</button>
                             </div>
                         </div>
-
-
                     </div>
                 </div> :
                     <div className="alert alert-success" role="alert">

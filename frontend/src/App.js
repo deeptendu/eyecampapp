@@ -23,7 +23,7 @@ const App = () => {
   const [currentPatient, setCurrentPatient] = useState({});
   //const navigate = useNavigate();
 
-  const listSize = 10;
+  const listSize = 500;
   // find search patient
   useEffect(() => {
     if (!isAuthenticated) return;

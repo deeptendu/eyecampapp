@@ -8,7 +8,7 @@ import fetchWithAlert from "../utils/FetchWrapper";
 
 const Register = (props) => {
 
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', password: '',adminPassword:'' });
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -23,6 +23,12 @@ const Register = (props) => {
 
     const handleUserRegistration = () => {
         setIsLoading(true);
+        //console.log("dattaaaa"+formData?.adminPassword);
+        if(formData?.adminPassword!=='SKRMeyecamp@2025'){
+            alert('Wrong admin password!!');
+            setIsLoading(false);
+            return;
+        }
         fetchWithAlert(userRegistration, options)
             .then(res => {
                 console.log('response' + JSON.stringify(res));
@@ -73,6 +79,14 @@ const Register = (props) => {
                                 <input value={formData.password}
                                     onChange={(event) => setFormData({ ...formData, password: event.target.value })} type="password" id="form3Example4" className="form-control form-control-lg"
                                     placeholder="Enter password" />
+                            </div>
+
+                            <div data-mdb-input-init className="form-outline mb-3">
+                                <label className="form-label" htmlFor="form3Example4">Admin Password</label>
+
+                                <input value={formData.adminPassword}
+                                    onChange={(event) => setFormData({ ...formData, adminPassword: event.target.value })} type="password" id="form3Example5" className="form-control form-control-lg"
+                                    placeholder="Enter Admin Password" />
                             </div>
 
                             <div className="text-center text-lg-start mt-4 pt-2">

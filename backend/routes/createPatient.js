@@ -30,10 +30,8 @@ const getNextSequenceValue = async () => {
 
 router.post('/api/createpatient', [
     body('PatientName', 'Enter a valid Patient Name (Name must have more than 3 letters)').isLength({ min: 3 }).isString(),
-    body('Age', 'Please Enter a valid Age').exists().isNumeric(),
-    body('Gender', 'Please Select a valid Gender').exists(),
-    body('AadharNumber', 'Please Enter a valid Aadhar Number (12 digits)').isLength({ min: 12 }).isNumeric(),
-    body('MobileNumber', 'Please Enter a valid Mobile Number (10 digits)').isLength({ min: 10 }).isNumeric()
+    body('Age', 'Please Enter a valid Age').isNumeric(),
+    body('Gender', 'Please Select a valid Gender').exists()
 ], fetchuser, async (req, res) => {
     //console.log(stringify(req));
     if (req.user.email === req.body.email) {

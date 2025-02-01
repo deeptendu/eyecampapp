@@ -4,17 +4,35 @@ import { useNavigate, Link } from 'react-router-dom';
 import { updatePatient } from "../ApiUrls";
 import fetchWithAlert from "../utils/FetchWrapper";
 import Spinner from "./Spinner";
+import SearchableDropdown from "./SearchableDropdown";
 
 const PatientUpdateForm = (props) => {
     const [showDate, setShowDate] = useState(false);
     const [operationDate, setOperationDate] = useState("");
-    const [isDateInvalid, setIsDateInvalid] = useState(false);
+    //const [isDateInvalid, setIsDateInvalid] = useState(false);
     const [dateUpdatedInDB, setDateUpdatedInDB] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const dateOptions = [
+        { value: "", label: "Select Patient State" },
+        { value: "25/02/2025", label: "25 FEB 2025" },
+        { value: "26/02/2025", label: "26 FEB 2025" },
+        { value: "27/02/2025", label: "27 FEB 2025" },
+        { value: "28/02/2025", label: "28 FEB 2025" },
+        { value: "01/03/2025", label: "01 MAR 2025" },
+        { value: "02/03/2025", label: "02 MAR 2025" },
+        { value: "03/03/2025", label: "03 MAR 2025" },
+        { value: "04/03/2025", label: "04 MAR 2025" },
+        { value: "05/03/2025", label: "05 MAR 2025" },
+        { value: "06/03/2025", label: "06 MAR 2025" },
+        { value: "07/03/2025", label: "07 MAR 2025" },
+        { value: "08/03/2025", label: "08 MAR 2025" },
+        { value: "09/03/2025", label: "09 MAR 2025" },
+        { value: "10/03/2025", label: "10 MAR 2025" }
+    ]
+
     useEffect(() => {
-        setIsDateInvalid(false);
         setOperationDate("");
         setDateUpdatedInDB(false);
     }, [props.currentPatient, navigate]);
@@ -22,17 +40,14 @@ const PatientUpdateForm = (props) => {
     let handleDateClick = (event) => {
         setShowDate(!showDate);
     }
-    let handleDateInput = (event) => {
-        const dateStr = event.target.value
-        const dateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-        dateStr.length >= 10 && !dateRegex.test(dateStr) ? setIsDateInvalid(true) : setOperationDate(dateStr);
-
+    let handleDateInput = (value) => {
+        setOperationDate(value?.value);
     }
     let handleOnSubmit = (e) => {
         //console.log(operationDate);
         setShowDate(false);
         setIsLoading(true);
-        
+
         const options = {
             method: 'POST',
             headers: {
@@ -49,7 +64,7 @@ const PatientUpdateForm = (props) => {
         fetchWithAlert(updatePatient, options)
             .then(res => {
                 setDateUpdatedInDB(true)
-                console.log('response' + JSON.stringify(res));
+                //console.log('response' + JSON.stringify(res));
             }).catch(err => {
                 const errorDetails = JSON.parse(err.message);
                 // console.error("Error Status:", errorDetails.status);
@@ -92,12 +107,17 @@ const PatientUpdateForm = (props) => {
                         <div className='col-md-4'>
                             <label htmlFor="inputName" className="col-form-label">{props.currentPatient.Age} years </label>
                         </div>
-                        <div className='col-md-2'>
+                        {props.currentPatient.HusbandName ? <><div className='col-md-2'>
                             <label htmlFor="inputName" className="col-form-label">Husband Name</label>
                         </div>
-                        <div className='col-md-4'>
-                            <label htmlFor="inputName" className="col-form-label">{props.currentPatient.HusbandName}</label>
-                        </div>
+                            <div className='col-md-4'>
+                                <label htmlFor="inputName" className="col-form-label">{props.currentPatient.HusbandName}</label>
+                            </div></> : props.currentPatient.FatherName ? <><div className='col-md-2'>
+                                <label htmlFor="inputName" className="col-form-label">Father Name</label>
+                            </div>
+                                <div className='col-md-4'>
+                                    <label htmlFor="inputName" className="col-form-label">{props.currentPatient.FatherName}</label>
+                                </div></> : <></>}
                     </div>
 
                     <div className='row my-3'>
@@ -122,7 +142,7 @@ const PatientUpdateForm = (props) => {
                             <label htmlFor="inputName" className="col-form-label">Operation Date</label>
                         </div>
                         <div className='col-md-4'>
-                            <label htmlFor="inputName" className="col-form-label">{props.currentPatient.operationDate}</label>
+                            <label htmlFor="inputName" className="col-form-label">{operationDate || props.currentPatient.operationDate}</label>
                         </div>
                     </div> : <></>}
 
@@ -168,7 +188,8 @@ const PatientUpdateForm = (props) => {
 
                                 </div>
                                 <div className='col-md-8'>
-                                    <div className="input-group has-validation">
+                                    <SearchableDropdown onSelect={handleDateInput} options={dateOptions} />
+                                    {/* <div className="input-group has-validation">
                                         <div className={isDateInvalid ? "form-floating is-invalid" : "form-floating"}>
                                             <input type="text" value={operationDate} onChange={handleDateInput} className={isDateInvalid ? "form-control is-invalid" : "form-control"} id="floatingInputGroup2" placeholder="DD/MM/YYYY eg. 20/09/2025" required />
                                             <label htmlFor="floatingInputGroup2">DD/MM/YYYY eg. 20/09/2025</label>
@@ -177,7 +198,7 @@ const PatientUpdateForm = (props) => {
                                             Please choose a valid date.
                                         </div> : <></>}
 
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div className='row my-3'>
