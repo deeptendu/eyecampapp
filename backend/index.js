@@ -18,7 +18,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 app.use(cors({
-  origin: "https://deeptendu.github.io", // React app's URL
+  origin: ["https://deeptendu.github.io","http://localhost:3000"], // React app's URL
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   credentials: true, // Allow cookies if needed
   allowedHeaders: ['Content-Type', 'auth-token','Accept']
