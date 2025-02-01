@@ -2,31 +2,33 @@
 import React from "react";
 import { useState } from "react";
 import { loginUrl, getUser } from "../ApiUrls";
-import { useNavigate ,Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import fetchWithAlert from "../utils/FetchWrapper";
 
 const Login = (props) => {
 
     const [formData, setFormData] = useState({ email: '', password: '' });
     const navigate = useNavigate();
-  
+    const [isLoading, setIsLoading] = useState(false);
+
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json' 
+            'Accept': 'application/json'
         },
         body: JSON.stringify(formData)
     };
 
     const handleLogin = () => {
+        setIsLoading(true);
         fetchWithAlert(loginUrl, options)
             .then(res => {
                 //console.log('response' + JSON.stringify(res.token));
                 localStorage.setItem("auth-token", res.token);
-                getUserAPI(res.token)
+                getUserAPI(res.token);
             }).catch(err => {
-                const errorDetails = JSON.parse(err.message);   
+                const errorDetails = JSON.parse(err.message);
                 // console.error("Error Status:", errorDetails.status);
                 // console.error("Error Message:", errorDetails.message);
                 // console.error("Error Body:", errorDetails.body);
@@ -34,18 +36,18 @@ const Login = (props) => {
                 if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
                     let validationMsg = "";
                     errorDetails.body.error.forEach(element => {
-                        validationMsg = validationMsg + element.msg;
+                        validationMsg = validationMsg + "\n" + element.msg;
                     });
                     alert(validationMsg);
                 }
-            })
+            }).finally(() => setIsLoading(false));
     }
     const getUserAPI = (token) => {
         const headers = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json' ,
+                'Accept': 'application/json',
                 'auth-token': token
             }
         };
@@ -53,26 +55,26 @@ const Login = (props) => {
         fetchWithAlert(getUser, headers).then(res => {
             // console.log('response' + JSON.stringify(res));
             // console.log('response email' + JSON.stringify(res.email));
-            if(res.email){
+            if (res.email) {
                 navigate(`/patientform`);
             }
-            props.setUser({id:res._id,name:res.name,email:res.email});
+            props.setUser({ id: res._id, name: res.name, email: res.email });
             props.setAuthenticated(true);
-           
+
 
         }).catch(err => {
-            const errorDetails = JSON.parse(err.message);   
-                // console.error("Error Status:", errorDetails.status);
-                // console.error("Error Message:", errorDetails.message);
-                // console.error("Error Body:", errorDetails.body);
-                // console.log('error response' + err);
-                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
-                    let validationMsg = "";
-                    errorDetails.body.error.forEach(element => {
-                        validationMsg = validationMsg + element.msg;
-                    });
-                    alert(validationMsg);
-                }
+            const errorDetails = JSON.parse(err.message);
+            // console.error("Error Status:", errorDetails.status);
+            // console.error("Error Message:", errorDetails.message);
+            // console.error("Error Body:", errorDetails.body);
+            // console.log('error response' + err);
+            if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                let validationMsg = "";
+                errorDetails.body.error.forEach(element => {
+                    validationMsg = validationMsg + "\n" + element.msg;
+                });
+                alert(validationMsg);
+            }
         })
 
     }
@@ -103,9 +105,12 @@ const Login = (props) => {
                             </div>
 
                             <div className="text-center text-lg-start mt-4 pt-2">
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
+                                {isLoading ? <button className="btn btn-primary" type="button" disabled>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span>
+                                    logging in....
+                                </button> : <button type="button" data-mdb-button-init data-mdb-ripple-init
                                     className="btn btn-primary btn-lg" onClick={handleLogin}
-                                    style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Login</button>
+                                    style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Login</button>}
                                 <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <Link to="/register"
                                     className="link-danger">Register</Link></p>
                             </div>

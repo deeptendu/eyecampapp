@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { userRegistration } from "../ApiUrls";
-import { useNavigate ,Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import fetchWithAlert from "../utils/FetchWrapper";
 
 
@@ -10,23 +10,25 @@ const Register = (props) => {
 
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json' 
+            'Accept': 'application/json'
         },
         body: JSON.stringify(formData)
     };
 
     const handleUserRegistration = () => {
+        setIsLoading(true);
         fetchWithAlert(userRegistration, options)
             .then(res => {
                 console.log('response' + JSON.stringify(res));
                 navigate('/login');
             }).catch(err => {
-                const errorDetails = JSON.parse(err.message);   
+                const errorDetails = JSON.parse(err.message);
                 // console.error("Error Status:", errorDetails.status);
                 // console.error("Error Message:", errorDetails.message);
                 // console.error("Error Body:", errorDetails.body);
@@ -34,11 +36,11 @@ const Register = (props) => {
                 if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
                     let validationMsg = "";
                     errorDetails.body.error.forEach(element => {
-                        validationMsg = validationMsg + element.msg;
+                        validationMsg = validationMsg + "\n" + element.msg;
                     });
                     alert(validationMsg);
                 }
-            })
+            }).finally(() => setIsLoading(false))
     }
     return (
         <section className="vh-100 ">
@@ -74,9 +76,13 @@ const Register = (props) => {
                             </div>
 
                             <div className="text-center text-lg-start mt-4 pt-2">
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
+                                {isLoading ? <button className="btn btn-primary" type="button" disabled>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Registering....
+                                </button> : <button type="button" data-mdb-button-init data-mdb-ripple-init
                                     className="btn btn-primary btn-lg" onClick={handleUserRegistration}
-                                    style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Register</button>
+                                    style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Register</button>}
+
                                 <p className="small fw-bold mt-2 pt-1 mb-0">Already have an account? <Link to="/login"
                                     className="link-danger">Go back to Login</Link></p>
                             </div>
