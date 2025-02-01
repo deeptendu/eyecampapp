@@ -1,35 +1,24 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
-import { findPatient, updatePatient } from "../ApiUrls";
+import {useNavigate, Link } from 'react-router-dom';
+import { updatePatient } from "../ApiUrls";
 import fetchWithAlert from "../utils/FetchWrapper";
 
 const PatientUpdateForm = (props) => {
     const [showDate, setShowDate] = useState(false);
     const [operationDate, setOperationDate] = useState("");
-    const [currentPatient, setCurrentPatient] = useState({});
     const [isDateInvalid, setIsDateInvalid] = useState(false);
     const [dateUpdatedInDB, setDateUpdatedInDB] = useState(false);
+    const navigate = useNavigate();
+
     useEffect(() => {
         setIsDateInvalid(false);
-        setOperationDate("")
-        const headers = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json' ,
-                'auth-token': localStorage.getItem('auth-token')
-            }
-        };
-        fetchWithAlert(findPatient + props.patientNoSearched, headers)
-         
-            .then(res => {
-                //console.log('response' + JSON.stringify(res));
-                setCurrentPatient(res);
-            }).catch(err => {
-                console.log('error response' + err);
-            })
-    }, [props.patientNoSearched]);
+        setOperationDate("");
+        if(!props.currentPatient?.PatientNumber){
+            navigate(`/patientform`);
+
+        }
+    }, [props.currentPatient,navigate]);
 
     let handleDateClick = (event) => {
         setShowDate(!showDate);
@@ -47,11 +36,11 @@ const PatientUpdateForm = (props) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json' ,
+                'Accept': 'application/json',
                 'auth-token': localStorage.getItem('auth-token')
             },
             body: JSON.stringify({
-                PatientNumber: currentPatient.PatientNumber,
+                PatientNumber: props.currentPatient.PatientNumber,
                 email: props.user.email,
                 operationDate: operationDate
             })
@@ -61,27 +50,37 @@ const PatientUpdateForm = (props) => {
                 setDateUpdatedInDB(true)
                 console.log('response' + JSON.stringify(res));
             }).catch(err => {
-                console.log('error response' + err);
+                const errorDetails = JSON.parse(err.message);
+                // console.error("Error Status:", errorDetails.status);
+                // console.error("Error Message:", errorDetails.message);
+                // console.error("Error Body:", errorDetails.body);
+                // console.log('error response' + err);
+                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                    let validationMsg = "";
+                    errorDetails.body.error.forEach(element => {
+                        validationMsg = validationMsg + element.msg;
+                    });
+                    alert(validationMsg);
+                }
             })
 
     }
     return (
+
         <React.Fragment>
             <div className='container border rounded border-primary my-3' >
-                {/* <h2>Patient Form</h2> */}
-
                 <div className='row my-3'>
                     <div className='col-md-2'>
                         <label htmlFor="inputName" className="col-form-label">Patient Number</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.PatientNumber}</label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.PatientNumber}</label>
                     </div>
                     <div className='col-md-2'>
                         <label htmlFor="inputName" className="col-form-label">Name</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.PatientName}</label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.PatientName}</label>
                     </div>
                 </div>
 
@@ -90,13 +89,13 @@ const PatientUpdateForm = (props) => {
                         <label htmlFor="inputName" className="col-form-label">Age</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.Age} years </label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.Age} years </label>
                     </div>
                     <div className='col-md-2'>
                         <label htmlFor="inputName" className="col-form-label">Husband Name</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.HusbandName}</label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.HusbandName}</label>
                     </div>
                 </div>
 
@@ -105,15 +104,26 @@ const PatientUpdateForm = (props) => {
                         <label htmlFor="inputName" className="col-form-label">Aadhar Number</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.AadharNumber}</label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.AadharNumber}</label>
                     </div>
                     <div className='col-md-2'>
                         <label htmlFor="inputName" className="col-form-label">State</label>
                     </div>
                     <div className='col-md-4'>
-                        <label htmlFor="inputName" className="col-form-label">{currentPatient.State}</label>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.State}</label>
                     </div>
                 </div>
+
+                {props.currentPatient.operationDate ? <div style={{ 'color': 'red' }} className='row my-3'>
+                    <div className='col-md-3'>
+                    </div>
+                    <div className='col-md-2'>
+                        <label htmlFor="inputName" className="col-form-label">Operation Date</label>
+                    </div>
+                    <div className='col-md-4'>
+                        <label htmlFor="inputName" className="col-form-label">{props.currentPatient.operationDate}</label>
+                    </div>
+                </div> : <></>}
 
             </div>
             <br />

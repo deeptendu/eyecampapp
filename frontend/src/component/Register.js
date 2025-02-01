@@ -26,7 +26,18 @@ const Register = (props) => {
                 console.log('response' + JSON.stringify(res));
                 navigate('/login');
             }).catch(err => {
-                console.log('error response' + err);
+                const errorDetails = JSON.parse(err.message);   
+                // console.error("Error Status:", errorDetails.status);
+                // console.error("Error Message:", errorDetails.message);
+                // console.error("Error Body:", errorDetails.body);
+                // console.log('error response' + err);
+                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                    let validationMsg = "";
+                    errorDetails.body.error.forEach(element => {
+                        validationMsg = validationMsg + element.msg;
+                    });
+                    alert(validationMsg);
+                }
             })
     }
     return (

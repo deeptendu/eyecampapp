@@ -74,12 +74,12 @@ const PatientForm = (props) => {
 
     let handleOnSubmit = (event) => {
 
-        console.log(patientDetails);
+        // console.log(patientDetails);
         const headers = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json' ,
+                'Accept': 'application/json',
                 'auth-token': localStorage.getItem('auth-token')
             },
             body: JSON.stringify(patientDetails)
@@ -90,23 +90,35 @@ const PatientForm = (props) => {
                 console.log('response' + JSON.stringify(res));
                 setPatientNumber(res.PatientNumber);
                 setCreatedSuccessFully(true);
+                props.setNewPatientCreated(true);
             }).catch(err => {
-                console.log('error response' + err);
+                const errorDetails = JSON.parse(err.message);   
+                // console.error("Error Status:", errorDetails.status);
+                // console.error("Error Message:", errorDetails.message);
+                // console.error("Error Body:", errorDetails.body);
+                // console.log('error response' + err);
+                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                    let validationMsg = "";
+                    errorDetails.body.error.forEach(element => {
+                        validationMsg = validationMsg + element.msg;
+                    });
+                    alert(validationMsg);
+                }
             })
     }
 
-    let reset = () =>{
+    let reset = () => {
         setCreatedSuccessFully(false);
         setPatientName("");
         setAge();
         setGender("");
         setMobileNo()
         setAadharNo("");
-         setState("");
-         setDistrict("");
-         setFatherName("");
-         setHusbandName("");
-         setPatientNumber("");
+        setState("");
+        setDistrict("");
+        setFatherName("");
+        setHusbandName("");
+        setPatientNumber("");
     }
     return (
         <React.Fragment>
@@ -255,7 +267,7 @@ const PatientForm = (props) => {
                 <div className='row my-3'>
                     <div className='col-md-6'>
                         <div className="col-md-12 d-grid gap-3">
-                            <button type="button" onClick={()=>reset()} className="btn btn-outline-danger ">Reset</button>
+                            <button type="button" onClick={() => reset()} className="btn btn-outline-danger ">Reset</button>
                         </div>
                     </div>
                     <div className='col-md-6'>
@@ -275,9 +287,9 @@ const PatientForm = (props) => {
                     <hr />
                     <p className="mb-0">Patient Age {age}</p>
                     <hr />
-                    <Link to='/patientform' onClick={()=>reset()}> Create Another Patient</Link>
+                    <Link to='/patientform' onClick={() => reset()}> Create Another Patient</Link>
                 </div>
-                }
+            }
 
         </React.Fragment>
     );

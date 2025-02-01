@@ -1,34 +1,12 @@
 
-import React, { useEffect, useState } from 'react';
 import Patient from './Patient';
-//import data from './PatientListData.json'
-import {getPatientList} from '../ApiUrls'
-import fetchWithAlert from "../utils/FetchWrapper";
 
 const PatientList = (props) => {
-    const [patientList, setPatientList] = useState([]);
-    const listSize=10;
-    useEffect(() => {
-        const headers = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json' ,
-                'auth-token': localStorage.getItem('auth-token')
-            }
-        };
-        fetchWithAlert(getPatientList+listSize, headers)
-            .then(res => {
-                //console.log('response' + JSON.stringify(res.token));
-                setPatientList(res);
-            }).catch(err => {
-                console.log('error response' + err);
-            })
-    }, []);
+
 
     return (
         <div className="list-group border rounded border-secondary " style={{ 'overflowY': 'scroll', height: '600px' }}>
-            {patientList.map((p) => {
+            {props.patientList.map((p) => {
                 return (<Patient key={p.PatientNumber} patientNo={p.PatientNumber}
                     patientName={p.PatientName}
                     age={p.Age}
