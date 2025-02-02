@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import fetchWithAlert from "../utils/FetchWrapper";
 import Spinner from './Spinner';
 import SearchableDropdown from './SearchableDropdown';
+import distList from '../utils/DistrictList.json'
 
 const PatientForm = (props) => {
 
@@ -22,6 +23,7 @@ const PatientForm = (props) => {
     const [createdSuccessFully, setCreatedSuccessFully] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({});
+    const [districtList, setDistrictList] = useState([]);
 
     const options = [
         { value: "", label: "Select Patient State" },
@@ -30,7 +32,7 @@ const PatientForm = (props) => {
         { value: "AS", label: "Assam" },
         { value: "BR", label: "Bihar" },
         { value: "CT", label: "Chhattisgarh" },
-        { value: "GA", label: "Gujarat" },
+        { value: "GJ", label: "Gujarat" },
         { value: "HR", label: "Haryana" },
         { value: "HP", label: "Himachal Pradesh" },
         { value: "JK", label: "Jammu and Kashmir" },
@@ -112,7 +114,7 @@ const PatientForm = (props) => {
     let aadharOnChange = (event) => {
         let value = event.target.value;
         setAadharNo(value);
-        if (/^\d{12}$/.test(value)|| !value) {
+        if (/^\d{12}$/.test(value) || !value) {
             setError({ ...error, aadharNo: "" }); // valid number input
         } else {
             setError({ ...error, aadharNo: "Aadhar number must be exactly 12 digits" });
@@ -122,10 +124,23 @@ const PatientForm = (props) => {
     let stateOnChange = (value) => {
         //console.log(value?.label);
         setState(value?.label);
+        let val = value?.value;
+        if (val) {
+            let foundState = distList.states.find(st => st.state === val);
+            let distMap = [];
+            let id = 1;
+            foundState.districts.forEach(dist => {
+                distMap.push({
+                    value: id, label: dist
+                });
+                id++;
+            });
+            setDistrictList(distMap);
+        }
         //console.log(patientName);
     }
-    let districtOnChange = (event) => {
-        setDistrict(event.target.value);
+    let districtOnChange = (value) => {
+        setDistrict(value?.label);
         //console.log(patientName);
     }
     let fatherNameOnChange = (event) => {
@@ -335,7 +350,12 @@ const PatientForm = (props) => {
                         </div>
                         <div className='col-md-10'>
                             <div className="input-group">
-                                <input type="text" value={district} onChange={districtOnChange} aria-label="District" placeholder="District" className="form-control" />
+                                {districtList?.length > 0 ?
+                                    <SearchableDropdown options={districtList} onSelect={districtOnChange} />
+                                    : <input type="text" value={district}
+                                        onChange={(event) => setDistrict(event.target.value)}
+                                        aria-label="District" placeholder="District" className="form-control" />
+                                }
                             </div>
                         </div>
                     </div>

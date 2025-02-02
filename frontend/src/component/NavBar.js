@@ -15,11 +15,8 @@ const NavBar = (props) => {
 
   }
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary border border-2 rounded border-secondary">
+    <nav className="navbar navbar-expand-lg  sticky-top bg-body-tertiary border border-2 rounded border-secondary">
       <div className="container-fluid ">
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav  me-auto  mb-2 mb-lg-1">
             <li className="nav-item border rounded border-secondary mx-1">
@@ -37,8 +34,8 @@ const NavBar = (props) => {
               </ul>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            <input className="form-control me-2" style={{ width: '600px' }} value={patientNo} onChange={handleSearchChange} type="search" placeholder="Search by Patient Number" aria-label="Search by Patient Number" />
+          <form className="d-flex w-50 justify-content-between" role="search">
+            <input className="w-100 form-control me-2"  value={patientNo} onChange={handleSearchChange} type="search" placeholder="Search by Patient Number" aria-label="Search by Patient Number" />
             <Link to="/patientupdateform">
               <button className="btn btn-outline-success" onClick={handleSearchClick} type="submit">Search</button>
             </Link>

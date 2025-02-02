@@ -4,7 +4,7 @@ import Select from "react-select";
 const SearchableDropdown = (props) => {
     const [selectedOption, setSelectedOption] = useState(null);
 
-    useEffect(()=>{props.onSelect(selectedOption)},[selectedOption,props]);
+    useEffect(()=>{props.onSelect(selectedOption)},[selectedOption]);
 
     return (
         <>

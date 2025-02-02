@@ -24,10 +24,10 @@ const App = () => {
   //const navigate = useNavigate();
 
   useEffect(() => {
-    const href=window.location.href;
+    //const href=window.location.href;
     //console.log("href>>>"+href);
-    if(href.endsWith("/login")||href.endsWith("/#")||href.endsWith("#/")||href.endsWith("eyecampapp/"))
-      return;
+    // if(href.endsWith("/login")||href.endsWith("/#")||href.endsWith("#/")||href.endsWith("eyecampapp/"))
+    //   return;
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue = ""; // Required for showing the browser warning
@@ -111,7 +111,7 @@ const App = () => {
       <Routes >
         <Route path="/patientform" element={
           isAuthenticated ?
-            <div >
+            < >
               <NavBar findPatient={setPatientNoSearched} user={userLoggedIn} />
               <div className='container-fluid'>
                 <div className='row my-3'>
@@ -124,7 +124,7 @@ const App = () => {
 
                 </div>
               </div>
-            </div> : <Navigate to="/" />} />
+            </> : <Navigate to="/" />} />
         <Route path="/patientupdateform" element={
           isAuthenticated ?
             < >
