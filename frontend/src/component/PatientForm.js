@@ -78,7 +78,7 @@ const PatientForm = (props) => {
 
     let nameOnChange = (event) => {
         setPatientName(event.target.value);
-        if (/^[A-Za-z]{3,}$/.test(event.target.value)) {
+        if (/^[A-Za-z ]{3,}$/.test(event.target.value)) {
             setError({ ...error, name: "" }); // valid number input
         } else {
             setError({ ...error, name: "Name must have atleast 3 Characters" });
@@ -102,7 +102,7 @@ const PatientForm = (props) => {
     let mobileOnChange = (event) => {
         let value = event.target.value;
         setMobileNo(value);
-        if (/^\d{10}$/.test(value)) {
+        if (/^\d{10}$/.test(value) || !value) {
             setError({ ...error, mobileNo: "" }); // valid number input
         } else {
             setError({ ...error, mobileNo: "Phone number must be exactly 10 digits" });
@@ -112,7 +112,7 @@ const PatientForm = (props) => {
     let aadharOnChange = (event) => {
         let value = event.target.value;
         setAadharNo(value);
-        if (/^\d{12}$/.test(value)) {
+        if (/^\d{12}$/.test(value)|| !value) {
             setError({ ...error, aadharNo: "" }); // valid number input
         } else {
             setError({ ...error, aadharNo: "Aadhar number must be exactly 12 digits" });
@@ -212,11 +212,17 @@ const PatientForm = (props) => {
                         <div className='col-md-10'>
                             <div className="input-group">
                                 <input type="text" aria-label="Age" placeholder='Years' value={age === 0 ? '' : age} onChange={ageOnChange} className="form-control me-2" />
-                                {error?.age && <div style={{ color: "red" }}>{error.age}</div>}
                             </div>
                         </div>
-
                     </div>
+                    {error?.age &&
+                        <div className='row my-3'>
+                            <div className='col-md-2'></div>
+                            <div className='col-md-10'>
+                                <div style={{ color: "red" }}>{error.age}</div>
+                            </div>
+                        </div>
+                    }
                     <div className='row my-3'>
                         <div className='col-md-2'>
                             <label htmlFor="inputGender" className="col-form-label">Gender<span className="text-danger">*</span></label>
@@ -244,11 +250,18 @@ const PatientForm = (props) => {
                         <div className='col-md-10'>
                             <div className="input-group">
                                 <input type="text" value={mobileNo} onChange={mobileOnChange} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control me-2" />
-                                {error?.mobileNo && <div style={{ color: "red" }}>{error.mobileNo}</div>}
                             </div>
                         </div>
 
+
                     </div>
+                    {error?.mobileNo &&
+                        <div className='row my-3'>
+                            <div className='col-md-2'></div>
+                            <div className='col-md-10'>
+                                <div style={{ color: "red" }}>{error.mobileNo}</div>
+                            </div>
+                        </div>}
                     <div className='row my-3'>
                         <div className='col-md-2'>
                             <label htmlFor="inputAadhar" className="col-form-label">Aadhar Number</label>
@@ -256,11 +269,17 @@ const PatientForm = (props) => {
                         <div className='col-md-10'>
                             <div className="input-group">
                                 <input type="text" value={aadharNo} onChange={aadharOnChange} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control me-2" />
-                                {error?.aadharNo && <div style={{ color: "red" }}>{error.aadharNo}</div>}
+
                             </div>
                         </div>
                     </div>
-
+                    {error?.aadharNo &&
+                        <div className='row my-3'>
+                            <div className='col-md-2'></div>
+                            <div className='col-md-10'>
+                                <div style={{ color: "red" }}>{error.aadharNo}</div>
+                            </div>
+                        </div>}
                     <div className='row my-3'>
                         <div className='col-md-2'>
                             <label htmlFor="inputState" className="col-form-label">State</label>
