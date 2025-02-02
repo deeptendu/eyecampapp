@@ -23,6 +23,19 @@ const App = () => {
   const [currentPatient, setCurrentPatient] = useState({});
   //const navigate = useNavigate();
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // Required for showing the browser warning
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const listSize = 500;
   // find search patient
   useEffect(() => {
