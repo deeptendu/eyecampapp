@@ -24,6 +24,10 @@ const App = () => {
   //const navigate = useNavigate();
 
   useEffect(() => {
+    const href=window.location.href;
+    //console.log("href>>>"+href);
+    if(href.endsWith("/login")||href.endsWith("/#")||href.endsWith("#/")||href.endsWith("eyecampapp/"))
+      return;
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue = ""; // Required for showing the browser warning
