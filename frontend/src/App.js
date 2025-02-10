@@ -132,7 +132,7 @@ const App = () => {
               <div className='container-fluid'>
                 <div className='row my-3'>
                   <div className='col-md-8'>
-                    {currentPatient?.PatientNumber ? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} patientNoSearched={patientNoSearched} />
+                    {currentPatient?.PatientNumber ? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} />
                       : <></>}
                   </div>
                   <div className='col-md-4'>

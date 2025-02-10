@@ -50,7 +50,7 @@ const PatientUpdateForm = (props) => {
     let handleDateInput = (value) => {
         setOperationDate(value?.value);
     }
-    const onChangeName = (event) =>{
+    const onChangeName = (event) => {
         if (/^[A-Za-z ]{3,}$/.test(event.target.value)) {
             setError({ ...error, name: "" }); // valid number input
         } else {
@@ -59,7 +59,7 @@ const PatientUpdateForm = (props) => {
         setCurrentPatient({ ...currentPatient, PatientName: event.target.value })
     }
 
-    const onChangeAge = (event) =>{
+    const onChangeAge = (event) => {
         if (/^\d{0,2}$/.test(event.target.value)) {
             setError({ ...error, age: "" }); // valid number input
         } else {
@@ -68,7 +68,7 @@ const PatientUpdateForm = (props) => {
         setCurrentPatient({ ...currentPatient, Age: event.target.value })
     }
 
-    const onChangeMobileNo = (event) =>{
+    const onChangeMobileNo = (event) => {
         let value = event.target.value;
         if (/^\d{10}$/.test(value) || !value) {
             setError({ ...error, mobileNo: "" }); // valid number input
@@ -78,7 +78,7 @@ const PatientUpdateForm = (props) => {
         setCurrentPatient({ ...currentPatient, MobileNumber: value })
     }
 
-    const onChangeAadharNo = (event) =>{
+    const onChangeAadharNo = (event) => {
         let value = event.target.value;
         if (/^\d{12}$/.test(value) || !value) {
             setError({ ...error, aadharNo: "" }); // valid number input
@@ -90,7 +90,7 @@ const PatientUpdateForm = (props) => {
 
     const handleSaveChanges = () => {
         // console.log('updated the patient'+JSON.stringify(currentPatient));
-      
+
         setIsUpdateLoading(true);
         const options = {
             method: 'POST',
@@ -311,7 +311,10 @@ const PatientUpdateForm = (props) => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h1 className="modal-title fs-4" id="myModalLabel">Edit details of Patient Number {currentPatient.PatientNumber} </h1>
-                                <button type="button" className="btn-close" onClick={()=>setCurrentPatient(props.currentPatient)} data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btn-close" onClick={() => {
+                                    setCurrentPatient(props.currentPatient)
+                                    setError({})
+                                }} data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 {
@@ -452,7 +455,10 @@ const PatientUpdateForm = (props) => {
                                 }
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={()=>setCurrentPatient(props.currentPatient)}>Close</button>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => {
+                                    setCurrentPatient(props.currentPatient)
+                                    setError({})
+                                }} >Close</button>
                                 {!editCompleted && <button type="button" onClick={handleSaveChanges}
                                     disabled={error?.mobileNo ||
                                         error?.aadharNo || error?.name || error?.age}
