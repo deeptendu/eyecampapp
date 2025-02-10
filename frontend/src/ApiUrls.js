@@ -7,4 +7,6 @@ export const createPatient='/api/createpatient';
 export const findPatient='/api/findpatient/';
 export const updatePatient='/api/updatepatient';
 export const getPatientList='/api/findpatientlist/';
+export const editPatient='/api/editpatient';
+
 

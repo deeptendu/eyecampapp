@@ -42,6 +42,9 @@ const patientSchema = new mongoose.Schema({
     },
     operationDate: {
         type: String,
+    },
+    updatedBy:{
+        type: String,
     }
 
 })

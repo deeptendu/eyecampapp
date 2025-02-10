@@ -8,6 +8,8 @@ const findPatient = require('./routes/FindPatient')
 const findPatientList = require('./routes/FindPatientList')
 
 const updatePatient = require('./routes/updatePatient')
+const editPatient = require('./routes/editPatient')
+
 
 const cors= require('cors')
 
@@ -31,6 +33,8 @@ app.post('/api/createpatient', createPatient);
 app.get('/api/findpatient/:number', findPatient);
 app.post('/api/updatepatient', updatePatient);
 app.get('/api/findpatientlist/:number', findPatientList);
+app.post('/api/editpatient', editPatient);
+
 
 
 

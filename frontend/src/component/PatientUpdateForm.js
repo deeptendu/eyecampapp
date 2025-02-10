@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from 'react-router-dom';
-import { updatePatient } from "../ApiUrls";
+import { updatePatient, editPatient } from "../ApiUrls";
 import fetchWithAlert from "../utils/FetchWrapper";
 import Spinner from "./Spinner";
 import SearchableDropdown from "./SearchableDropdown";
@@ -13,6 +13,11 @@ const PatientUpdateForm = (props) => {
     const [dateUpdatedInDB, setDateUpdatedInDB] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const [currentPatient, setCurrentPatient] = useState(props.currentPatient);
+    const [error, setError] = useState({});
+    const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+    const [closeModal, setCloseModal] = useState("none");
+
 
     const dateOptions = [
         { value: "", label: "Select Patient State" },
@@ -35,13 +40,55 @@ const PatientUpdateForm = (props) => {
     useEffect(() => {
         setOperationDate("");
         setDateUpdatedInDB(false);
-    }, [props.currentPatient, navigate]);
+        setCurrentPatient(props.currentPatient);
+    }, [props.currentPatient]);
 
     let handleDateClick = (event) => {
-        setShowDate(!showDate);
+        setShowDate(event.target.checked);
     }
     let handleDateInput = (value) => {
         setOperationDate(value?.value);
+    }
+    const handleSaveChanges = () => {
+        // console.log('updated the patient'+JSON.stringify(currentPatient));
+        setIsUpdateLoading(true);
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'auth-token': localStorage.getItem('auth-token')
+            },
+            body: JSON.stringify({
+                ...currentPatient,
+                email: props.user.email,
+                updatedBy: props.user.email
+            })
+        };
+        console.log('updated the patient' + JSON.stringify(options.body));
+
+        fetchWithAlert(editPatient, options)
+            .then(res => {
+                setDateUpdatedInDB(true)
+                //console.log('response' + JSON.stringify(res));
+            }).catch(err => {
+                const errorDetails = JSON.parse(err.message);
+                // console.error("Error Status:", errorDetails.status);
+                // console.error("Error Message:", errorDetails.message);
+                // console.error("Error Body:", errorDetails.body);
+                // console.log('error response' + err);
+                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                    let validationMsg = "";
+                    errorDetails.body.error.forEach(element => {
+                        validationMsg = validationMsg + "\n" + element.msg;
+                    });
+                    alert(validationMsg);
+                }
+            }).finally(() => {
+                setIsUpdateLoading(false);
+                setCloseModal("modal");
+            });
+
     }
     let handleOnSubmit = (e) => {
         //console.log(operationDate);
@@ -95,8 +142,14 @@ const PatientUpdateForm = (props) => {
                         <div className='col-md-2'>
                             <label htmlFor="inputName" className="col-form-label">Name</label>
                         </div>
-                        <div className='col-md-4'>
+                        <div className='col-md-2'>
                             <label htmlFor="inputName" className="col-form-label">{props.currentPatient.PatientName}</label>
+                        </div>
+                        <div className='col-md-2'>
+                            <button type="button" className="btn btn-secondary rounded-circle"
+                                data-bs-toggle="modal" data-bs-target="#EditModal">
+                                <i className="bi bi-pencil"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -156,7 +209,7 @@ const PatientUpdateForm = (props) => {
                             </div>
                             <div className='col-md-8'>
                                 <div className="form-check form-switch">
-                                    <input className="form-check-input" value={showDate} onChange={handleDateClick} type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                                    <input className="form-check-input" checked={showDate} onChange={handleDateClick} type="checkbox" role="switch" id="flexSwitchCheckDefault" />
                                     <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Set Operation Date</label>
                                 </div>
                             </div>
@@ -213,6 +266,159 @@ const PatientUpdateForm = (props) => {
                             </div>
                         </div>
                 }
+
+                <div className="modal fade" id="EditModal" tabIndex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-xl">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-4" id="myModalLabel">Edit Details of Patient Number </h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                {
+                                    !isUpdateLoading ? <div className='container border rounded border-primary my-3' >
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputName" className="col-form-label">Patient Name<span className="text-danger">*</span></label>
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <input type="text" aria-label="Patient Name" placeholder="Patient Name"
+                                                    value={currentPatient.PatientName}
+                                                    onChange={(e) => setCurrentPatient({ ...currentPatient, PatientName: e.target.value })} className="form-control me-2" />
+                                                {error?.name && <div style={{ color: "red" }}>{error.name}</div>}
+                                            </div>
+                                        </div>
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputAge" className="col-form-label">Age<span className="text-danger">*</span></label>
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <div className="input-group">
+                                                    <input type="text" aria-label="Age" placeholder='Years' value={currentPatient.Age} onChange={e => setCurrentPatient({ ...currentPatient, Age: e.target.value })} className="form-control me-2" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {error?.age &&
+                                            <div className='row my-3'>
+                                                <div className='col-md-2'></div>
+                                                <div className='col-md-10'>
+                                                    <div style={{ color: "red" }}>{error.age}</div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputGender" className="col-form-label">Gender<span className="text-danger">*</span></label>
+                                            </div>
+                                            <div className="btn-group col-md-10" onClick={e => setCurrentPatient({ ...currentPatient, Gender: e.target.innerText })} role="group" aria-label="Basic radio toggle button group">
+                                                {
+                                                    currentPatient.Gender === 'Male' ? <input type="radio" className="btn-check" name="btnradio" id="Male" autoComplete="off" checked />
+                                                        : <input type="radio" className="btn-check" name="btnradio" id="Male" autoComplete="off" />
+                                                }
+
+                                                <label className="btn btn-outline-primary" htmlFor="btnradio1">Male</label>
+                                                {
+                                                    currentPatient.Gender === 'Female' ? <input type="radio" className="btn-check" name="btnradio" id="Female" autoComplete="off" checked />
+                                                        : <input type="radio" className="btn-check" name="btnradio" id="Female" autoComplete="off" />
+                                                }
+
+                                                <label className="btn btn-outline-primary" htmlFor="btnradio2">Female</label>
+
+                                            </div>
+                                        </div>
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputMobile" className="col-form-label">Mobile Number</label>
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <div className="input-group">
+                                                    <input type="text" value={currentPatient.MobileNumber} onChange={e => setCurrentPatient({ ...currentPatient, MobileNumber: e.target.value })} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control me-2" />
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        {error?.mobileNo &&
+                                            <div className='row my-3'>
+                                                <div className='col-md-2'></div>
+                                                <div className='col-md-10'>
+                                                    <div style={{ color: "red" }}>{error.mobileNo}</div>
+                                                </div>
+                                            </div>}
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputAadhar" className="col-form-label">Aadhar Number</label>
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <div className="input-group">
+                                                    <input type="text" value={currentPatient.AadharNumber} onChange={e => setCurrentPatient({ ...currentPatient, AadharNumber: e.target.value })} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control me-2" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {error?.aadharNo &&
+                                            <div className='row my-3'>
+                                                <div className='col-md-2'></div>
+                                                <div className='col-md-10'>
+                                                    <div style={{ color: "red" }}>{error.aadharNo}</div>
+                                                </div>
+                                            </div>}
+                                        {/* <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputState" className="col-form-label">State</label>
+                                            </div>
+                                            <div className='col-md-10'>
+
+
+                                                <SearchableDropdown options={options} onSelect={stateOnChange} />
+                                            </div>
+                                        </div> */}
+
+                                        {/* <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputDistrict" className="col-form-label">District</label>
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <div className="input-group">
+                                                    {districtList?.length > 0 ?
+                                                        <SearchableDropdown options={districtList} onSelect={districtOnChange} />
+                                                        : <input type="text" value={district}
+                                                            onChange={(event) => setDistrict(event.target.value)}
+                                                            aria-label="District" placeholder="District" className="form-control" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div> */}
+
+                                        <div className='row my-3'>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputFatherName" className="col-form-label">Father's Name</label>
+                                            </div>
+                                            <div className='col-md-4'>
+                                                <div className="input-group">
+                                                    <input type="text" value={currentPatient.FatherName} onChange={e => setCurrentPatient({ ...currentPatient, FatherName: e.target.value })} aria-label="Father's Name" placeholder='Father Name' className="form-control" />
+                                                </div>
+                                            </div>
+                                            <div className='col-md-2'>
+                                                <label htmlFor="inputHusbandName" className="col-form-label">Husband's Name</label>
+                                            </div>
+                                            <div className='col-md-4'>
+                                                <div className="input-group">
+                                                    <input type="text" value={currentPatient.HusbandName} onChange={e => setCurrentPatient({ ...currentPatient, HusbandName: e.target.value })} aria-label="Age" placeholder='Husband Name' className="form-control" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div> : <Spinner></Spinner>
+                                }
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" onClick={handleSaveChanges} className="btn btn-primary" data-bs-dismiss={closeModal}>Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </React.Fragment>
         );
     }
