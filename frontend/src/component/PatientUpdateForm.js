@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { updatePatient, editPatient } from "../ApiUrls";
 import fetchWithAlert from "../utils/FetchWrapper";
 import Spinner from "./Spinner";
@@ -12,11 +12,11 @@ const PatientUpdateForm = (props) => {
     //const [isDateInvalid, setIsDateInvalid] = useState(false);
     const [dateUpdatedInDB, setDateUpdatedInDB] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const [currentPatient, setCurrentPatient] = useState(props.currentPatient);
     const [error, setError] = useState({});
     const [isUpdateLoading, setIsUpdateLoading] = useState(false);
-    const [closeModal, setCloseModal] = useState("none");
+    const [editCompleted, setEditCompleted] = useState(false);
 
 
     const dateOptions = [
@@ -40,6 +40,7 @@ const PatientUpdateForm = (props) => {
     useEffect(() => {
         setOperationDate("");
         setDateUpdatedInDB(false);
+        setEditCompleted(false);
         setCurrentPatient(props.currentPatient);
     }, [props.currentPatient]);
 
@@ -49,8 +50,47 @@ const PatientUpdateForm = (props) => {
     let handleDateInput = (value) => {
         setOperationDate(value?.value);
     }
+    const onChangeName = (event) =>{
+        if (/^[A-Za-z ]{3,}$/.test(event.target.value)) {
+            setError({ ...error, name: "" }); // valid number input
+        } else {
+            setError({ ...error, name: "Name must have atleast 3 Characters" });
+        }
+        setCurrentPatient({ ...currentPatient, PatientName: event.target.value })
+    }
+
+    const onChangeAge = (event) =>{
+        if (/^\d{0,2}$/.test(event.target.value)) {
+            setError({ ...error, age: "" }); // valid number input
+        } else {
+            setError({ ...error, age: "Please enter a valid age" });
+        }
+        setCurrentPatient({ ...currentPatient, Age: event.target.value })
+    }
+
+    const onChangeMobileNo = (event) =>{
+        let value = event.target.value;
+        if (/^\d{10}$/.test(value) || !value) {
+            setError({ ...error, mobileNo: "" }); // valid number input
+        } else {
+            setError({ ...error, mobileNo: "Phone number must be exactly 10 digits" });
+        }
+        setCurrentPatient({ ...currentPatient, MobileNumber: value })
+    }
+
+    const onChangeAadharNo = (event) =>{
+        let value = event.target.value;
+        if (/^\d{12}$/.test(value) || !value) {
+            setError({ ...error, aadharNo: "" }); // valid number input
+        } else {
+            setError({ ...error, aadharNo: "Aadhar number must be exactly 12 digits" });
+        }
+        setCurrentPatient({ ...currentPatient, AadharNumber: value })
+    }
+
     const handleSaveChanges = () => {
         // console.log('updated the patient'+JSON.stringify(currentPatient));
+      
         setIsUpdateLoading(true);
         const options = {
             method: 'POST',
@@ -65,11 +105,11 @@ const PatientUpdateForm = (props) => {
                 updatedBy: props.user.email
             })
         };
-        console.log('updated the patient' + JSON.stringify(options.body));
+        //console.log('updated the patient' + JSON.stringify(options.body));
 
         fetchWithAlert(editPatient, options)
             .then(res => {
-                setDateUpdatedInDB(true)
+                setEditCompleted(true);
                 //console.log('response' + JSON.stringify(res));
             }).catch(err => {
                 const errorDetails = JSON.parse(err.message);
@@ -86,7 +126,6 @@ const PatientUpdateForm = (props) => {
                 }
             }).finally(() => {
                 setIsUpdateLoading(false);
-                setCloseModal("modal");
             });
 
     }
@@ -146,9 +185,9 @@ const PatientUpdateForm = (props) => {
                             <label htmlFor="inputName" className="col-form-label">{props.currentPatient.PatientName}</label>
                         </div>
                         <div className='col-md-2'>
-                            <button type="button" className="btn btn-secondary rounded-circle"
-                                data-bs-toggle="modal" data-bs-target="#EditModal">
-                                <i className="bi bi-pencil"></i>
+                            <button type="button" className="btn btn-secondary circle"
+                                data-bs-toggle="modal" onClick={e => setEditCompleted(false)} data-bs-target="#EditModal">
+                                <i className="bi bi-pencil"></i> Edit
                             </button>
                         </div>
                     </div>
@@ -271,12 +310,12 @@ const PatientUpdateForm = (props) => {
                     <div className="modal-dialog modal-xl">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-4" id="myModalLabel">Edit Details of Patient Number </h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h1 className="modal-title fs-4" id="myModalLabel">Edit details of Patient Number {currentPatient.PatientNumber} </h1>
+                                <button type="button" className="btn-close" onClick={()=>setCurrentPatient(props.currentPatient)} data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 {
-                                    !isUpdateLoading ? <div className='container border rounded border-primary my-3' >
+                                    !isUpdateLoading && !editCompleted ? <div className='container border rounded border-primary my-3' >
                                         <div className='row my-3'>
                                             <div className='col-md-2'>
                                                 <label htmlFor="inputName" className="col-form-label">Patient Name<span className="text-danger">*</span></label>
@@ -284,7 +323,7 @@ const PatientUpdateForm = (props) => {
                                             <div className='col-md-10'>
                                                 <input type="text" aria-label="Patient Name" placeholder="Patient Name"
                                                     value={currentPatient.PatientName}
-                                                    onChange={(e) => setCurrentPatient({ ...currentPatient, PatientName: e.target.value })} className="form-control me-2" />
+                                                    onChange={onChangeName} className="form-control me-2" />
                                                 {error?.name && <div style={{ color: "red" }}>{error.name}</div>}
                                             </div>
                                         </div>
@@ -294,7 +333,7 @@ const PatientUpdateForm = (props) => {
                                             </div>
                                             <div className='col-md-10'>
                                                 <div className="input-group">
-                                                    <input type="text" aria-label="Age" placeholder='Years' value={currentPatient.Age} onChange={e => setCurrentPatient({ ...currentPatient, Age: e.target.value })} className="form-control me-2" />
+                                                    <input type="text" aria-label="Age" placeholder='Years' value={currentPatient.Age} onChange={onChangeAge} className="form-control me-2" />
                                                 </div>
                                             </div>
                                         </div>
@@ -332,7 +371,7 @@ const PatientUpdateForm = (props) => {
                                             </div>
                                             <div className='col-md-10'>
                                                 <div className="input-group">
-                                                    <input type="text" value={currentPatient.MobileNumber} onChange={e => setCurrentPatient({ ...currentPatient, MobileNumber: e.target.value })} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control me-2" />
+                                                    <input type="text" value={currentPatient.MobileNumber} onChange={onChangeMobileNo} aria-label="Mobile Number" placeholder="Mobile Number" className="form-control me-2" />
                                                 </div>
                                             </div>
 
@@ -351,7 +390,7 @@ const PatientUpdateForm = (props) => {
                                             </div>
                                             <div className='col-md-10'>
                                                 <div className="input-group">
-                                                    <input type="text" value={currentPatient.AadharNumber} onChange={e => setCurrentPatient({ ...currentPatient, AadharNumber: e.target.value })} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control me-2" />
+                                                    <input type="text" value={currentPatient.AadharNumber} onChange={onChangeAadharNo} aria-label="Aadhar Number" placeholder="Aadhar Number" className="form-control me-2" />
 
                                                 </div>
                                             </div>
@@ -409,12 +448,15 @@ const PatientUpdateForm = (props) => {
                                             </div>
 
                                         </div>
-                                    </div> : <Spinner></Spinner>
+                                    </div> : editCompleted ? <div>Details updated Successfully</div> : <Spinner></Spinner>
                                 }
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" onClick={handleSaveChanges} className="btn btn-primary" data-bs-dismiss={closeModal}>Save changes</button>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={()=>setCurrentPatient(props.currentPatient)}>Close</button>
+                                {!editCompleted && <button type="button" onClick={handleSaveChanges}
+                                    disabled={error?.mobileNo ||
+                                        error?.aadharNo || error?.name || error?.age}
+                                    className="btn btn-primary" >Save changes</button>}
                             </div>
                         </div>
                     </div>
