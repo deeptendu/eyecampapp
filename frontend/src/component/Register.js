@@ -24,7 +24,7 @@ const Register = (props) => {
     const handleUserRegistration = () => {
         setIsLoading(true);
         //console.log("dattaaaa"+formData?.adminPassword);
-        if(formData?.adminPassword!=='SKRMeyecamp@2025'){
+        if(formData?.adminPassword!=='SKRMeyecamp@2025New'){
             alert('Wrong admin password!!');
             setIsLoading(false);
             return;

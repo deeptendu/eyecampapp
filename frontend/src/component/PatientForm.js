@@ -135,6 +135,7 @@ const PatientForm = (props) => {
                 });
                 id++;
             });
+            distMap.push({ value: id, label: "Other"});
             setDistrictList(distMap);
         }
         //console.log(patientName);

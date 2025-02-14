@@ -21,6 +21,8 @@ const PatientUpdateForm = (props) => {
 
     const dateOptions = [
         { value: "", label: "Select Patient State" },
+        { value: "23/02/2025", label: "23 FEB 2025" },
+        { value: "24/02/2025", label: "24 FEB 2025" },
         { value: "25/02/2025", label: "25 FEB 2025" },
         { value: "26/02/2025", label: "26 FEB 2025" },
         { value: "27/02/2025", label: "27 FEB 2025" },
@@ -171,6 +173,14 @@ const PatientUpdateForm = (props) => {
         return (
             <React.Fragment>
                 <div className='container border rounded border-primary my-3' >
+                    <div className='row my-2'>
+                        <div className='col-md-12 d-flex justify-content-end'>
+                            <button type="button" className="btn btn-secondary circle"
+                                data-bs-toggle="modal" onClick={e => setEditCompleted(false)} data-bs-target="#EditModal">
+                                <i className="bi bi-pencil"></i> Edit
+                            </button>
+                        </div>
+                    </div>
                     <div className='row my-3'>
                         <div className='col-md-2'>
                             <label htmlFor="inputName" className="col-form-label">Patient Number</label>
@@ -181,14 +191,8 @@ const PatientUpdateForm = (props) => {
                         <div className='col-md-2'>
                             <label htmlFor="inputName" className="col-form-label">Name</label>
                         </div>
-                        <div className='col-md-2'>
+                        <div className='col-md-4'>
                             <label htmlFor="inputName" className="col-form-label">{props.currentPatient.PatientName}</label>
-                        </div>
-                        <div className='col-md-2'>
-                            <button type="button" className="btn btn-secondary circle"
-                                data-bs-toggle="modal" onClick={e => setEditCompleted(false)} data-bs-target="#EditModal">
-                                <i className="bi bi-pencil"></i> Edit
-                            </button>
                         </div>
                     </div>
 

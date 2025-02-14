@@ -13,6 +13,7 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
+import Spinner from './component/Spinner';
 
 const App = () => {
   const [patientNoSearched, setPatientNoSearched] = useState();
@@ -21,6 +22,7 @@ const App = () => {
   const [patientList, setPatientList] = useState([]);
   const [newPatientCreated, setNewPatientCreated] = useState(false);
   const [currentPatient, setCurrentPatient] = useState({});
+  const [patientSearched,setPatientSearched] = useState(false);
   //const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const App = () => {
   // find search patient
   useEffect(() => {
     if (!isAuthenticated) return;
+    setPatientSearched(true);
     const headers = {
       method: 'GET',
       headers: {
@@ -73,7 +76,7 @@ const App = () => {
           });
           alert(validationMsg);
         }
-      })
+      }).finally(()=>setPatientSearched(false))
   }, [patientNoSearched]);
 
   // to get patient List
@@ -132,8 +135,8 @@ const App = () => {
               <div className='container-fluid'>
                 <div className='row my-3'>
                   <div className='col-md-8'>
-                    {currentPatient?.PatientNumber ? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} />
-                      : <></>}
+                    {currentPatient?.PatientNumber && !patientSearched? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} />
+                      : patientSearched?<Spinner/>:<></>}
                   </div>
                   <div className='col-md-4'>
                     <PatientList patientList={patientList} findPatient={setPatientNoSearched} />
