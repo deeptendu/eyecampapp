@@ -20,7 +20,6 @@ const PatientUpdateForm = (props) => {
 
 
     const dateOptions = [
-        { value: "", label: "Select Patient State" },
         { value: "23/02/2025", label: "23 FEB 2025" },
         { value: "24/02/2025", label: "24 FEB 2025" },
         { value: "25/02/2025", label: "25 FEB 2025" },
