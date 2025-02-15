@@ -27,6 +27,7 @@ const App = () => {
   const [newPatientCreated, setNewPatientCreated] = useState(false);
   const [currentPatient, setCurrentPatient] = useState({});
   const [patientSearched, setPatientSearched] = useState(false);
+  const [resetOTPValid,setResetOTPValid] = useState(false);
   //const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const App = () => {
     //console.log("href>>>"+href);
     // if(href.endsWith("/login")||href.endsWith("/#")||href.endsWith("#/")||href.endsWith("eyecampapp/"))
     //   return;
+    localStorage.setItem("resetEmail", null);
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue = ""; // Required for showing the browser warning
@@ -155,8 +157,8 @@ const App = () => {
           setUser={setUserLoggedIn} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP setResetOTPValid={setResetOTPValid}/>} />
+        <Route path="/reset-password" element={resetOTPValid?<ResetPassword />: <Navigate to="/" />} />
       </Routes >
 
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const VerifyOTP = () => {
+const VerifyOTP = (props) => {
     const [otpInput, setOtpInput] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
@@ -10,6 +10,7 @@ const VerifyOTP = () => {
     const handleVerifyOTP = (e) => {
         e.preventDefault();
         if (otpInput === storedOtp) {
+            props.setResetOTPValid(true);
             navigate("/reset-password");
         } else {
             alert("Invalid OTP");

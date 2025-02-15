@@ -7,23 +7,26 @@ const ResetPassword = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const email = localStorage.getItem("resetEmail");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
-
+        setIsLoading(true);
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({"email":email,
-                "password": password})
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
         };
 
         fetchWithAlert(updatePassword, options)
             .then(res => {
-                console.log('response' + JSON.stringify(res));
+                //console.log('response' + JSON.stringify(res));
                 alert(`Password updated successfully, please Login with new password`);
                 navigate('/login');
             }).catch(err => {
@@ -39,6 +42,9 @@ const ResetPassword = () => {
                     });
                     alert(validationMsg);
                 }
+            }).finally(() => {
+                localStorage.setItem("resetEmail", null);
+                setIsLoading(false);
             });
 
     };
@@ -55,7 +61,10 @@ const ResetPassword = () => {
                         <h2 className="text-center">Reset Password</h2>
                         <form onSubmit={handleResetPassword}>
                             <input type="password" placeholder="Please enter new password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                            <button type="submit" className="btn btn-primary w-100 mt-3">Reset Password</button>
+                            {isLoading ? <button className="btn btn-primary w-100 mt-3" type="submit" disabled>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span>
+                                Resetting....
+                            </button> : <button type="submit" className="btn btn-primary w-100 mt-3">Reset Password</button>}
                         </form>
                     </div>
                 </div>

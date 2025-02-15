@@ -6,12 +6,15 @@ import {checkUser} from "../ApiUrls";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
-    const [otp, setOtp] = useState(null); // Store OTP in state
+    //const [otp, setOtp] = useState(null); // Store OTP in state
     const navigate = useNavigate();
+    const [userExist,setUserExist] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    
 
     const handleSendOTP = async (e) => {
         e.preventDefault();
-
+        setIsLoading(true);
         const optionsToCheckUser = {
             method: 'POST',
             headers: {
@@ -24,8 +27,8 @@ const ForgotPassword = () => {
         fetchWithAlert(checkUser, optionsToCheckUser)
             .then(res => {
                 //console.log('response send OTP' + JSON.stringify(res));
-                if(!res.user)
-                    return;
+                if(res.user)
+                    setUserExist(true);
             }).catch(err => {
                 const errorDetails = JSON.parse(err.message);
                 // console.error("Error Status:", errorDetails.status);
@@ -39,9 +42,9 @@ const ForgotPassword = () => {
                     });
                     alert(validationMsg);
                 }
-                return;
             });
-
+        if(!userExist)
+            return;
         const options = {
             method: 'POST',
             headers: {
@@ -53,8 +56,8 @@ const ForgotPassword = () => {
 
         fetchWithAlert(sendOTP, options)
             .then(res => {
-                console.log('response send OTP' + JSON.stringify(res));
-                setOtp(res.otp);
+                //console.log('response send OTP' + JSON.stringify(res));
+                //setOtp(res.otp);
                 localStorage.setItem("resetEmail", email);
                 navigate("/verify-otp", { state: { otp: res.otp } });
             }).catch(err => {
@@ -70,7 +73,7 @@ const ForgotPassword = () => {
                     });
                     alert(validationMsg);
                 }
-            });
+            }).finally(()=>setIsLoading(false));
     };
 
     return (
@@ -88,7 +91,10 @@ const ForgotPassword = () => {
                                 <label className="form-label">Enter your Registered Email Id</label>
                                 <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
                             </div>
-                            <button type="submit" className="btn btn-primary w-100">Send OTP</button>
+                           { isLoading ? <button className="btn btn-primary w-100" type="submit" disabled>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"> </span>
+                                    Sending OTP....
+                                </button> :<button type="submit" className="btn btn-primary w-100">Send OTP</button>}
                         </form>
                     </div>
                 </div>
