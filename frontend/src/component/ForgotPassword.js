@@ -42,7 +42,7 @@ const ForgotPassword = () => {
                     });
                     alert(validationMsg);
                 }
-            });
+            }).finally(()=>{setIsLoading(false)});
         if(!userExist)
             return;
         const options = {
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
             },
             body: JSON.stringify({ email })
         };
-
+        setIsLoading(true);
         fetchWithAlert(sendOTP, options)
             .then(res => {
                 //console.log('response send OTP' + JSON.stringify(res));
