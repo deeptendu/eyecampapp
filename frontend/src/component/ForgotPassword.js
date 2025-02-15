@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendOTP } from "../ApiUrls";
 import fetchWithAlert from "../utils/FetchWrapper";
+import {checkUser} from "../ApiUrls";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -10,6 +11,36 @@ const ForgotPassword = () => {
 
     const handleSendOTP = async (e) => {
         e.preventDefault();
+
+        const optionsToCheckUser = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        };
+
+        fetchWithAlert(checkUser, optionsToCheckUser)
+            .then(res => {
+                //console.log('response send OTP' + JSON.stringify(res));
+                if(!res.user)
+                    return;
+            }).catch(err => {
+                const errorDetails = JSON.parse(err.message);
+                // console.error("Error Status:", errorDetails.status);
+                // console.error("Error Message:", errorDetails.message);
+                // console.error("Error Body:", errorDetails.body);
+                // console.log('error response' + err);
+                if (errorDetails?.body?.error && Array.isArray(errorDetails.body.error)) {
+                    let validationMsg = "";
+                    errorDetails.body.error.forEach(element => {
+                        validationMsg = validationMsg + "\n" + element.msg;
+                    });
+                    alert(validationMsg);
+                }
+                return;
+            });
 
         const options = {
             method: 'POST',

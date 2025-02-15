@@ -33,7 +33,7 @@ router.post('/api/sendotp', [
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
-        if (error) return res.status(500).json({ message: "Error sending email", error });
+        if (error) return res.status(500).json({ error: "Error sending email"});
         res.status(200).json({ message: "OTP sent successfully", otp }); // Send OTP to frontend
     });
 

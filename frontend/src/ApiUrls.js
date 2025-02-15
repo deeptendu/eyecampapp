@@ -10,3 +10,4 @@ export const getPatientList='/api/findpatientlist/';
 export const editPatient='/api/editpatient';
 export const sendOTP='/api/sendotp';
 export const updatePassword='/api/auth/updateuser';
+export const checkUser='/api/auth/checkuser';

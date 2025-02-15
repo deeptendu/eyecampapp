@@ -11,7 +11,7 @@ const updatePatient = require('./routes/updatePatient')
 const editPatient = require('./routes/editPatient')
 const SendOTP = require('./routes/SendOTP')
 const updatePassword = require('./routes/UpdateUser')
-
+const checkUser = require('./routes/CheckUserExist')
 
 const bodyParser = require("body-parser");
 
@@ -34,6 +34,7 @@ app.use(bodyParser.json());
 app.use(express.json())
 app.post('/api/auth/createuser', createUser);
 app.post('/api/auth/updateuser', updatePassword);
+app.post('/api/auth/checkuser', checkUser);
 app.post('/api/auth/login', login);
 app.get('/api/auth/getuser', getUser);
 app.post('/api/createpatient', createPatient);
