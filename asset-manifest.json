@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/eyecampapp/static/css/main.31d6cfe0.css",
-    "main.js": "/eyecampapp/static/js/main.4d6dc108.js",
+    "main.js": "/eyecampapp/static/js/main.3e97bb88.js",
     "static/js/488.fd740fe0.chunk.js": "/eyecampapp/static/js/488.fd740fe0.chunk.js",
     "index.html": "/eyecampapp/index.html",
-    "main.4d6dc108.js.map": "/eyecampapp/static/js/main.4d6dc108.js.map",
+    "main.3e97bb88.js.map": "/eyecampapp/static/js/main.3e97bb88.js.map",
     "488.fd740fe0.chunk.js.map": "/eyecampapp/static/js/488.fd740fe0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.31d6cfe0.css",
-    "static/js/main.4d6dc108.js"
+    "static/js/main.3e97bb88.js"
   ]
 }
