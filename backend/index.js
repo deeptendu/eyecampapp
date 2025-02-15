@@ -9,6 +9,11 @@ const findPatientList = require('./routes/FindPatientList')
 
 const updatePatient = require('./routes/updatePatient')
 const editPatient = require('./routes/editPatient')
+const SendOTP = require('./routes/SendOTP')
+const updatePassword = require('./routes/UpdateUser')
+
+
+const bodyParser = require("body-parser");
 
 
 const cors= require('cors')
@@ -25,8 +30,10 @@ app.use(cors({
   credentials: true, // Allow cookies if needed
   allowedHeaders: ['Content-Type', 'auth-token','Accept']
 }));
+app.use(bodyParser.json());
 app.use(express.json())
 app.post('/api/auth/createuser', createUser);
+app.post('/api/auth/updateuser', updatePassword);
 app.post('/api/auth/login', login);
 app.get('/api/auth/getuser', getUser);
 app.post('/api/createpatient', createPatient);
@@ -34,6 +41,7 @@ app.get('/api/findpatient/:number', findPatient);
 app.post('/api/updatepatient', updatePatient);
 app.get('/api/findpatientlist/:number', findPatientList);
 app.post('/api/editpatient', editPatient);
+app.post('/api/sendotp', SendOTP);
 
 
 

@@ -23,7 +23,7 @@ const CustomSelect = ({ options, onChange }) => {
             value={selectedOption}
             onChange={handleChange}
             onCreateOption={handleCreate}
-            placeholder="Search & select State"
+            placeholder="Search & select"
             isSearchable
             className="w-100"
         />

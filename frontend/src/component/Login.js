@@ -102,6 +102,8 @@ const Login = (props) => {
                                 <input value={formData.password}
                                     onChange={(event) => setFormData({ ...formData, password: event.target.value })} type="password" id="form3Example4" className="form-control form-control-lg"
                                     placeholder="Enter password" />
+                                <Link to="/forgot-password"
+                                    className="link-danger">Forgot Password</Link>
                             </div>
 
                             <div className="text-center text-lg-start mt-4 pt-2">

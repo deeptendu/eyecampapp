@@ -14,6 +14,10 @@ import {
   Navigate
 } from "react-router-dom";
 import Spinner from './component/Spinner';
+import ForgotPassword from './component/ForgotPassword';
+import VerifyOTP from './component/VerifyOTP';
+import ResetPassword from './component/ResetPassword';
+
 
 const App = () => {
   const [patientNoSearched, setPatientNoSearched] = useState();
@@ -22,7 +26,7 @@ const App = () => {
   const [patientList, setPatientList] = useState([]);
   const [newPatientCreated, setNewPatientCreated] = useState(false);
   const [currentPatient, setCurrentPatient] = useState({});
-  const [patientSearched,setPatientSearched] = useState(false);
+  const [patientSearched, setPatientSearched] = useState(false);
   //const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,7 +80,7 @@ const App = () => {
           });
           alert(validationMsg);
         }
-      }).finally(()=>setPatientSearched(false))
+      }).finally(() => setPatientSearched(false))
   }, [patientNoSearched]);
 
   // to get patient List
@@ -135,8 +139,8 @@ const App = () => {
               <div className='container-fluid'>
                 <div className='row my-3'>
                   <div className='col-md-8'>
-                    {currentPatient?.PatientNumber && !patientSearched? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} />
-                      : patientSearched?<Spinner/>:<></>}
+                    {currentPatient?.PatientNumber && !patientSearched ? <PatientUpdateForm user={userLoggedIn} currentPatient={currentPatient} />
+                      : patientSearched ? <Spinner /> : <></>}
                   </div>
                   <div className='col-md-4'>
                     <PatientList patientList={patientList} findPatient={setPatientNoSearched} />
@@ -150,6 +154,9 @@ const App = () => {
         <Route path="/" element={<Login setAuthenticated={setIsAuthenticated}
           setUser={setUserLoggedIn} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes >
 
 
